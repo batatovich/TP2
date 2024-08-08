@@ -1,9 +1,15 @@
 import SubmitBtn from './SubmitBtn';
+import prisma from '../../lib/db.js';
 
 export default function SignInForm() {
     const login = async (formData) => {
         "use server";
-        //TO DO: db sign in query
+        await prisma.User.create({
+            data: {
+                email: formData.get('email'),
+                password: formData.get('password'),
+            },
+        })
     };
 
     return (
