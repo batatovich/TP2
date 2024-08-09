@@ -1,20 +1,10 @@
-import SubmitBtn from './SubmitBtn';
-import prisma from '../../lib/db.js';
+import SubmitBtn from './submit-btn';
 
 export default function SignInForm() {
-    const login = async (formData) => {
-        "use server";
-        await prisma.User.create({
-            data: {
-                email: formData.get('email'),
-                password: formData.get('password'),
-            },
-        })
-    };
-
     return (
         <form
-            action={login}
+            action='api/auth/signin'
+            method='POST'
             className="flex flex-col rounded max-w-[500px] mb-10 mx-auto space-y-2">
             <input
                 type='text'
@@ -28,7 +18,7 @@ export default function SignInForm() {
                 placeholder='Password'
                 className='border rounded h-10 px-3'
                 required />
-            <SubmitBtn/>
+            <SubmitBtn text='Sign In' />
         </form>
     )
 }
