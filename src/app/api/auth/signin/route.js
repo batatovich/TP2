@@ -14,14 +14,14 @@ export async function POST(request) {
         });
 
         if (!user) {
-            return NextResponse.json({ error: 'Invalid credentials.' }, { status: 200 });
+            return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
         }
 
         // Check if password is valid
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            return NextResponse.json({ error: 'Invalid credentials.' }, { status: 200 });
+            return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
         }
 
         const token = jwt.sign({ data: user.email }, process.env.SECRET_KEY, { expiresIn: '1h' });
