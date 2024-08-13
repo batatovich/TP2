@@ -41,7 +41,7 @@ export default function SignInPage() {
       } else {
         setStatusMessage('Successfully authenticated!');
         setTimeout(() => {
-          router.push('/');
+          router.push('/dashboard');
         }, 2000);
       }
     } catch (error) {
@@ -101,7 +101,7 @@ export default function SignInPage() {
 
       <p className="mt-4 text-center text-gray-600">
         Don&apos;t have an account?{' '}
-        <Link href="/auth/signup" className="text-blue-500 hover:text-blue-700 font-bold">
+        <Link href="/signup" className="text-blue-500 hover:text-blue-700 font-bold">
           Sign Up!
         </Link>
       </p>
