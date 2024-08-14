@@ -1,7 +1,7 @@
 import prisma from '@/lib/db';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
+import { createSession } from '@/lib/sessions';
 
 export async function POST(request) {
     const data = await request.json();
@@ -24,19 +24,11 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
         }
 
-        const token = jwt.sign({ data: user.email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        // Create session and set cookie
+        await createSession(user.id);
 
-        const res = NextResponse.json({ success: 'Signed in successfully!' }, { status: 200 });
+        return NextResponse.json({ success: 'Signed in successfully!' }, { status: 200 });
 
-        res.cookies.set('token', token, {
-            httpOnly: true, // Helps prevent XSS
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            maxAge: 60 * 60, // 1 hour
-            sameSite: 'strict', // CSRF protection
-            path: '/',
-        });
-
-        return res;
     } catch (error) {
         console.error('Error during sign in:', error);
         return NextResponse.json(
