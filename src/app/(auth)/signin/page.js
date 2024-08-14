@@ -42,7 +42,7 @@ export default function SignInPage() {
         setStatusMessage('Successfully authenticated!');
         setTimeout(() => {
           router.push('/dashboard');
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       setProcessing(false);
