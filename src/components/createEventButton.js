@@ -1,20 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import CreateEventModal from './createEventModal';
+import CreateEventModal from '@/components/createEventModal';
 
-export default function CreateEventButton() {
+const CreateEventButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <>
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        onClick={() => setIsModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={openModal}
       >
         Create Event
       </button>
-      {isModalOpen && <CreateEventModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <CreateEventModal onClose={closeModal} />}
     </>
   );
-}
+};
+
+export default CreateEventButton;
