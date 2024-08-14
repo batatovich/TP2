@@ -12,7 +12,6 @@ const Navbar = () => {
     event.preventDefault();
 
     try {
-
       const response = await fetch('/api/auth/signout', {
         method: 'POST',
         headers: {
@@ -20,17 +19,16 @@ const Navbar = () => {
         }
       });
 
-      const result = await response.json();
-
       if (response.ok) {
-        setTimeout(() => {
-          router.push('/signin');
-        }, 2000);
+        router.push('/signin'); 
+      } else {
+        console.error('Sign-out failed');
       }
     } catch (error) {
-      console.log(error);
+      console.error('An error occurred during sign-out:', error);
     }
   };
+
   const pathname = usePathname();
 
   const navItems = [
@@ -60,8 +58,13 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-            <li key={'signuot'}>
-              <button onClick={handleSignOut}>Sign Out</button>
+            <li>
+              <button
+                onClick={handleSignOut}
+                className="text-gray-300 hover:text-white hover:border-b-2 hover:border-white transition-colors duration-200"
+              >
+                Sign Out
+              </button>
             </li>
           </ul>
         </div>
