@@ -1,28 +1,10 @@
-import { cookies } from 'next/headers';
-import { decrypt } from '@/lib/sessions';
-import { fetchMyEvents } from '@/lib/events';
+import { fetchMyEvents } from '@/lib/event-actions';
 import CreateEventButton from '@/components/createEventButton';
+import DeleteEventButton from '@/components/deleteEventButton';
 
 export default async function MyEventsPage() {
-  const cookieStore = cookies();
-  const sessionCookie = cookieStore.get('session')?.value;
 
-  let userId = null;
-
-  if (sessionCookie) {
-    const sessionData = await decrypt(sessionCookie);
-    userId = sessionData?.userId;
-  }
-
-  if (!userId) {
-    return (
-      <div>
-        <p>Please log in to view your events.</p>
-      </div>
-    );
-  }
-
-  const events = await fetchMyEvents(userId);
+  const events = await fetchMyEvents();
 
   return (
     <div className="container mx-auto p-4">
@@ -37,14 +19,29 @@ export default async function MyEventsPage() {
               key={event.id}
               className="bg-white border border-gray-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <h2 className="text-2xl font-bold mb-2 text-purple-700">{event.name}</h2>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-2xl font-bold mb-2 text-purple-700">{event.name}</h2>
+                <DeleteEventButton eventId={event.id} />
+              </div>
               <p className="text-gray-600 mb-4">{event.description}</p>
-              <p className="text-gray-800"><strong>Location:</strong> {event.location}</p>
-              <p className="text-gray-800"><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
-              <p className="text-gray-800"><strong>Capacity:</strong> {event.capacity}</p>
-              <p className="text-gray-800">
-                <strong>Fee:</strong> {event.fee === 0 ? 'Free' : `$${event.fee}`}
-              </p>
+              <div className="grid grid-cols-2 gap-4 mt-2">
+                <div>
+                  <p className="font-semibold">Location:</p>
+                  <p>{event.location}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Date:</p>
+                  <p>{new Date(event.date).toLocaleDateString()}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Capacity:</p>
+                  <p>{event.capacity}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Fee:</p>
+                  <p>{event.fee === 0 ? 'Free' : `$${event.fee}`}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
