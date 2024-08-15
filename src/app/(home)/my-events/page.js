@@ -2,6 +2,8 @@ import { fetchMyEvents } from '@/lib/event-actions';
 import CreateEventButton from '@/components/createEventButton';
 import DeleteEventButton from '@/components/deleteEventButton';
 
+export const dynamic = "force-dynamic";
+
 export default async function MyEventsPage() {
 
   const events = await fetchMyEvents();
