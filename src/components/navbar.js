@@ -20,7 +20,7 @@ const Navbar = () => {
       });
 
       if (response.ok) {
-        router.push('/signin'); 
+        router.push('/signin');
       } else {
         console.error('Sign-out failed');
       }
@@ -39,7 +39,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="w-full h-20 bg-gradient-to-r from-purple-700 via-blue-500 to-blue-700 sticky top-0 z-50 shadow-md">
+    <div className="w-full h-20 bg-gradient-to-r from-purple-700 via-blue-500 to-blue-700 top-0 z-20 shadow-md">
       <div className="container mx-auto px-3 h-full">
         <div className="flex justify-between items-center h-full">
           <div className="text-white text-2xl font-bold">EventHub</div>
