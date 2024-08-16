@@ -4,8 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import { useApolloClient } from '@apollo/client';
 
 const Navbar = () => {
+  const client = useApolloClient();
   const router = useRouter();
 
   const handleSignOut = async (event) => {
@@ -20,6 +22,7 @@ const Navbar = () => {
       });
 
       if (response.ok) {
+        client.clearStore();
         router.push('/signin');
       } else {
         console.error('Sign-out failed');
