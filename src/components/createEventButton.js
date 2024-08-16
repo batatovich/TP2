@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import CreateEventModal from '@/components/createEventModal';
 
-const CreateEventButton = () => {
+const CreateEventButton = ({ refetch }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -17,7 +17,7 @@ const CreateEventButton = () => {
       >
         Create Event
       </button>
-      {isModalOpen && <CreateEventModal onClose={closeModal} />}
+      {isModalOpen && <CreateEventModal onClose={closeModal} refetch={refetch} />}
     </>
   );
 };

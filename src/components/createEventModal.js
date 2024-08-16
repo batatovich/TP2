@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createEvent } from '@/lib/event-actions';
-import { useRouter } from 'next/navigation';
 
-
-const CreateEventModal = ({ onClose }) => {
+const CreateEventModal = ({ onClose, refetch }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -15,15 +12,25 @@ const CreateEventModal = ({ onClose }) => {
     fee: '',
   });
 
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await createEvent(formData);
+      const response = await fetch('/api/events/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create event');
+      }
+
       onClose();
-      router.refresh();
+      refetch();
     } catch (error) {
       console.error('Error creating event:', error);
       // Handle error (e.g., show error message)
