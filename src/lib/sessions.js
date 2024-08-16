@@ -45,3 +45,20 @@ export async function createSession(userId) {
 export function deleteSession() {
   cookies().delete('session');
 }
+
+export async function getUserIdFromSession(req) {
+  try {
+    const cookieStore = cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
+
+    if (!sessionCookie) {
+      throw new Error('Session cookie not found');
+    }
+
+    const session = await decrypt(sessionCookie);
+    return session.userId;
+  } catch (error) {
+    console.error('Error retrieving user ID from session:', error);
+    return null;
+  }
+}
