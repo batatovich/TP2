@@ -40,9 +40,7 @@ export default function SignInPage() {
         setProcessing(false);
       } else {
         setStatusMessage('Successfully authenticated!');
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
+        router.push('/dashboard');
       }
     } catch (error) {
       setProcessing(false);
