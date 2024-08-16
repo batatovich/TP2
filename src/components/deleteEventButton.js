@@ -1,21 +1,28 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { deleteEvent } from '@/lib/event-actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const DeleteEventButton = ({ eventId }) => {
-  const router = useRouter();
+const DeleteEventButton = ({ eventId, refetch }) => {
 
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this event?')) {
       try {
-        await deleteEvent(eventId);
-        router.refresh();
+        const response = await fetch('/api/events/delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ eventId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete event');
+        }
+        refetch();
       } catch (error) {
-        console.error('Failed to delete event:', error);
+        console.error('Error deleting event:', error);
       }
     }
   };
