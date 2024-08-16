@@ -39,9 +39,8 @@ export default function SignUpPage() {
 
       if (response.ok) {
         setStatusMessage('User registered successfully!');
-        setTimeout(() => {
-          router.push('/auth/signin');
-        }, 2000);
+        router.push('/auth/signin');
+
       } else {
         setStatusMessage(`${result.error}`);
         setProcessing(false);

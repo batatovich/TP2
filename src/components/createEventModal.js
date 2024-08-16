@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { CREATE_EVENT } from '@/lib/graphql/mutations';
+import { CreateEventSchema } from '@/lib/definitions';
 
 const CreateEventModal = ({ onClose, refetch }) => {
+  const [validationErrors, setValidationErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -11,29 +15,50 @@ const CreateEventModal = ({ onClose, refetch }) => {
     capacity: '',
     fee: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT, {
+    onCompleted: () => {
+      setIsSubmitting(false);
+      onClose();
+      refetch();
+    },
+    onError: (err) => {
+      setIsSubmitting(false);
+      console.error('Error creating event:', err);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { name, description, location, date, capacity, fee } = formData;
 
     try {
-      const response = await fetch('/api/events/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      await CreateEventSchema.validate(formData, { abortEarly: false });
+
+      setIsSubmitting(true);
+      await createEvent({
+        variables: {
+          name,
+          description,
+          location,
+          date,
+          capacity: parseInt(capacity, 10),
+          fee: parseFloat(fee),
         },
-        body: JSON.stringify(formData),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to create event');
+    } catch (validationError) {
+      setIsSubmitting(false);
+      if (validationError.name === 'ValidationError') {
+        const formattedErrors = validationError.inner.reduce((acc, err) => {
+          acc[err.path] = err.message;
+          return acc;
+        }, {});
+        setValidationErrors(formattedErrors);
+        console.log('Validation errors:', formattedErrors);
+      } else {
+        console.error('Unexpected error during validation:', validationError);
       }
-
-      onClose();
-      refetch();
-    } catch (error) {
-      console.error('Error creating event:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
@@ -51,6 +76,7 @@ const CreateEventModal = ({ onClose, refetch }) => {
               className="w-full p-2 border rounded"
               required
             />
+            {validationErrors.name && <p className="text-red-500 text-sm">{validationErrors.name}</p>}
           </div>
 
           <div className="mb-4">
@@ -62,6 +88,7 @@ const CreateEventModal = ({ onClose, refetch }) => {
               className="w-full p-2 border rounded"
               required
             />
+            {validationErrors.description && <p className="text-red-500 text-sm">{validationErrors.description}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -74,6 +101,7 @@ const CreateEventModal = ({ onClose, refetch }) => {
                 className="w-full p-2 border rounded"
                 required
               />
+              {validationErrors.location && <p className="text-red-500 text-sm">{validationErrors.location}</p>}
             </div>
             <div>
               <label>Date</label>
@@ -84,6 +112,7 @@ const CreateEventModal = ({ onClose, refetch }) => {
                 className="w-full p-2 border rounded"
                 required
               />
+              {validationErrors.date && <p className="text-red-500 text-sm">{validationErrors.date}</p>}
             </div>
           </div>
 
@@ -97,6 +126,7 @@ const CreateEventModal = ({ onClose, refetch }) => {
                 className="w-full p-2 border rounded"
                 required
               />
+              {validationErrors.capacity && <p className="text-red-500 text-sm">{validationErrors.capacity}</p>}
             </div>
             <div>
               <label>Fee</label>
@@ -108,18 +138,24 @@ const CreateEventModal = ({ onClose, refetch }) => {
                 className="w-full p-2 border rounded"
                 required
               />
+              {validationErrors.fee && <p className="text-red-500 text-sm">{validationErrors.fee}</p>}
             </div>
           </div>
 
           <div className="flex justify-end">
-            <button type="button" onClick={onClose} className="mr-2 px-4 py-2 rounded border">
+            <button type="button" onClick={onClose} className="bg-slate-100 hover:bg-slate-200 mr-2 px-4 py-2 rounded border">
               Cancel
             </button>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-              Create
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:bg-slate-600"
+              disabled={loading || isSubmitting}
+            >
+              {isSubmitting ? 'Creating...' : 'Create'}
             </button>
           </div>
         </form>
+        {error && <p className="text-red-500 mt-2">Error creating event: {error.message}</p>}
       </div>
     </div>
   );

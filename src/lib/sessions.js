@@ -48,18 +48,14 @@ export function deleteSession() {
 
 export async function getUserIdFromSession(req) {
   try {
-    const sessionCookie = req.cookies?.session || cookies().get('session')?.value;
+    const cookieStore = cookies();
+    const sessionCookie = cookieStore.get('session')?.value;
 
     if (!sessionCookie) {
-      return null;
+      throw new Error('Session cookie not found');
     }
 
     const session = await decrypt(sessionCookie);
-
-    if (!session || !session.userId) {
-      return null;
-    }
-
     return session.userId;
   } catch (error) {
     console.error('Error retrieving user ID from session:', error);
