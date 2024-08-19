@@ -12,7 +12,6 @@ const server = new ApolloServer({
 const handler = startServerAndCreateNextHandler(server, {
   context: async ({ req }) => {
     const userId = await getUserIdFromSession(req);
-    console.log(userId);
     return { userId };
   },
 });

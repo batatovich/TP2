@@ -4,10 +4,10 @@ import React from 'react';
 import CreateEventButton from '@/components/createEventButton';
 import DeleteEventButton from '@/components/deleteEventButton';
 import { useQuery } from '@apollo/client';
-import { GET_EVENTS } from '@/lib/graphql/queries';
+import { GET_MY_EVENTS } from '@/lib/graphql/queries';  // Import the correct query
 
 export default function MyEventsPage() {
-  const { loading, error, data, refetch } = useQuery(GET_EVENTS);
+  const { loading, error, data, refetch } = useQuery(GET_MY_EVENTS);  // Use the new query here
 
   if (loading) return (
     <div className="flex justify-center items-center h-48">
@@ -25,7 +25,7 @@ export default function MyEventsPage() {
     </div>
   );
 
-  const events = data?.events || [];
+  const events = data?.myEvents || [];  // Access the data from the correct field
 
   return (
     <div className="container mx-auto p-4">
