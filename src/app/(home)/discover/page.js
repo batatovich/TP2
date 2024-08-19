@@ -70,7 +70,7 @@ export default function DiscoverPage() {
                 <div className="flex justify-between items-center mb-2">
                   {!application && (
                     <p className="text-slate-600 font-bold">
-                      Don't miss out, apply now!
+                      Don&apos;t miss out, apply now!
                     </p>
                   )}
                   {application && renderApplicationStatus(application.status)}
