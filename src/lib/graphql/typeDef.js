@@ -2,23 +2,24 @@ const typeDefs = `#graphql
   type Query {
     users: [User!]
     user(id: ID!): User
-    events(userId: ID): [Event!]
-    event(id: ID!): Event
+    myEvents: [Event!]
+    othersEvents: [Event!]
+    eventApplications(eventId: ID!): [Application!]
   }
 
   type Mutation {
     createEvent(name: String!, description: String!, location: String!, date: String!, capacity: Int!, fee: Float!): Event
-    deleteEvent(id: ID!): Event
+    deleteEvent(id: ID!): Boolean
+    applyToEvent(id: ID!): Boolean
+    cancelApplication(id: ID!): Boolean
+    updateApplicationStatus(id: ID!, status: ApplicationStatus!): Boolean
   }
 
   type User {
     id: ID!
     email: String!
     password: String!
-    events: [Event]
-    applications: [Application]
     createdAt: String!
-    updatedAt: String!
   }
 
   type Event {
@@ -30,18 +31,25 @@ const typeDefs = `#graphql
     capacity: Int!
     fee: Float!
     creator: User!
-    applications: [Application]
     createdAt: String!
-    updatedAt: String!
+    acceptedApplicationCount: Int!      # Number of applications for this event
+    applications: [Application!]  # Include applications only when requested
   }
 
   type Application {
     id: ID!
-    status: String!
+    status: ApplicationStatus!
     event: Event!
     user: User!
     createdAt: String!
   }
+
+  enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
 `;
 
 export default typeDefs;

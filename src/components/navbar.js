@@ -38,12 +38,11 @@ const Navbar = () => {
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'My Events', path: '/my-events' },
     { name: 'Discover', path: '/discover' },
-    { name: 'About Us', path: '/about' },
   ];
 
   return (
     <div className="w-full h-20 bg-gradient-to-r from-purple-700 via-blue-500 to-blue-700 top-0 z-20 shadow-md">
-      <div className="container mx-auto px-3 h-full">
+      <div className="container mx-auto px-10 h-full">
         <div className="flex justify-between items-center h-full">
           <div className="text-white text-2xl font-bold">EventHub</div>
           <ul className="hidden md:flex gap-x-6 text-white">

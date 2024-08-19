@@ -30,14 +30,24 @@ export const CREATE_EVENT = gql`
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
-    deleteEvent(id: $id) {
-      id
-      name
-      description
-      location
-      date
-      capacity
-      fee
-    }
+    deleteEvent(id: $id)
+  }
+`;
+
+export const APPLY_TO_EVENT = gql`
+  mutation ApplyToEvent($id: ID!) {
+      applyToEvent(id: $id)
+  }
+`;
+
+export const CANCEL_APPLICATION = gql`
+  mutation CancelApplication($id: ID!) {
+    cancelApplication(id: $id)
+  }
+`;
+
+export const UPDATE_APPLICATION_STATUS = gql`
+  mutation UpdateApplicationStatus($id: ID!, $status: ApplicationStatus!) {
+    updateApplicationStatus(id: $id, status: $status) 
   }
 `;
