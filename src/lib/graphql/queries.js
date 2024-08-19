@@ -35,3 +35,15 @@ export const GET_MY_EVENTS = gql`
     }
   }
 `;
+
+export const GET_EVENT_APPLICATIONS = gql`
+  query GET_EVENT_APPLICATIONS($eventId: ID!) {
+    eventApplications(eventId: $eventId) {
+      id
+      user {
+        email
+      }
+      status
+    }
+  }
+`;

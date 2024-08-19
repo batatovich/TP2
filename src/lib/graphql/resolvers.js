@@ -40,6 +40,29 @@ const resolvers = {
 
       return events;
     },
+    eventApplications: async (_, { eventId }, context) => {
+      const { userId } = context;
+      if (!userId) {
+        throw new Error('Unauthorized');
+      }
+
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        include: {
+          applications: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      if (!event || event.creatorId !== userId) {
+        throw new Error('You do not have permission to view applications for this event.');
+      }
+
+      return event.applications;
+    },
   },
   Mutation: {
     createEvent: async (_, { name, description, location, date, capacity, fee }, context) => {
@@ -150,6 +173,36 @@ const resolvers = {
 
       await prisma.application.delete({
         where: { id },
+      });
+
+      return true;
+    },
+    updateApplicationStatus: async (_, { id, status }, context) => {
+      const { userId } = context;
+      if (!userId) {
+        throw new Error('Unauthorized');
+      }
+
+      // Find the application and check if the event belongs to the current user
+      const application = await prisma.application.findUnique({
+        where: { id },
+        include: {
+          event: true,
+        },
+      });
+
+      if (!application) {
+        throw new Error('Application not found');
+      }
+
+      if (application.event.creatorId !== userId) {
+        throw new Error('You do not have permission to update this application.');
+      }
+
+      // Update the status of the application
+      const updatedApplication = await prisma.application.update({
+        where: { id },
+        data: { status },
       });
 
       return true;

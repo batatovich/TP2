@@ -4,6 +4,7 @@ const typeDefs = `#graphql
     user(id: ID!): User
     myEvents: [Event!]
     othersEvents: [Event!]
+    eventApplications(eventId: ID!): [Application!]
   }
 
   type Mutation {
@@ -11,6 +12,7 @@ const typeDefs = `#graphql
     deleteEvent(id: ID!): Boolean
     applyToEvent(id: ID!): Boolean
     cancelApplication(id: ID!): Boolean
+    updateApplicationStatus(id: ID!, status: ApplicationStatus!): Boolean
   }
 
   type User {

@@ -3,11 +3,12 @@
 import React from 'react';
 import CreateEventButton from '@/components/createEventButton';
 import DeleteEventButton from '@/components/deleteEventButton';
+import ReviewApplicationsButton from '@/components/reviewApplicationsButton';
 import { useQuery } from '@apollo/client';
-import { GET_MY_EVENTS } from '@/lib/graphql/queries';  // Import the correct query
+import { GET_MY_EVENTS } from '@/lib/graphql/queries';
 
 export default function MyEventsPage() {
-  const { loading, error, data, refetch } = useQuery(GET_MY_EVENTS);  // Use the new query here
+  const { loading, error, data, refetch } = useQuery(GET_MY_EVENTS);
 
   if (loading) return (
     <div className="flex justify-center items-center h-48">
@@ -25,7 +26,7 @@ export default function MyEventsPage() {
     </div>
   );
 
-  const events = data?.myEvents || [];  // Access the data from the correct field
+  const events = data?.myEvents || [];
 
   return (
     <div className="container mx-auto p-4">
@@ -38,12 +39,13 @@ export default function MyEventsPage() {
           {events.map(event => (
             <div
               key={event.id}
-              className="bg-white border border-gray-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="bg-white border border-gray-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-2xl font-bold mb-2 text-purple-700">{event.name}</h2>
+              <div className="absolute top-2 right-2 flex space-x-2">
+                <ReviewApplicationsButton eventId={event.id} />
                 <DeleteEventButton eventId={event.id} refetch={refetch} />
               </div>
+              <h2 className="text-2xl font-bold mb-2 text-purple-700 mt-8">{event.name}</h2>
               <p className="text-gray-600 mb-4">{event.description}</p>
               <div className="grid grid-cols-2 gap-4 mt-2">
                 <div>

@@ -45,3 +45,9 @@ export const CANCEL_APPLICATION = gql`
     cancelApplication(id: $id)
   }
 `;
+
+export const UPDATE_APPLICATION_STATUS = gql`
+  mutation UpdateApplicationStatus($id: ID!, $status: ApplicationStatus!) {
+    updateApplicationStatus(id: $id, status: $status) 
+  }
+`;
